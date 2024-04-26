@@ -9,6 +9,7 @@ import ProductList from '@/app/_components/ProductList';
 
 const ProjectDetails = ({params}) => {
     const [productDetail, setProductDetail] = useState([]);
+    const [productCategory, setProductCategory] = useState([]);
 
     useEffect(() => {
       getProductById_();
@@ -18,11 +19,16 @@ const ProjectDetails = ({params}) => {
     const getProductById_ = () => {
         GlobalApi.getProductById(1).then(res => {
            setProductDetail(res.data.data);
+           getProductListByCategory(res.data.data)
         })
     }
 
     const getProductListByCategory= () => {
-
+        GlobalApi.getProductByCategory(productDetail?.attributes?.product_cat?.data?.attributes?.Name).then(res => {
+            console.log(res.data.data);
+           setProductCategory(res.data.data);
+           
+        })
     }
   return (
     
@@ -32,7 +38,11 @@ const ProjectDetails = ({params}) => {
             <ProjectBanner product={productDetail}/>
             <ProjectInfo product={productDetail}/>
         </div>
-        <ProductList productList={getProductListByCategory(productDetail)}/>
+        {productCategory.length >0 && <div className="mt-20">
+            <h2 className='text-[20px] font-bold'>Related Products</h2>
+            <ProductList productList={productCategory}/>
+        </div>}
+       
     </div>
   )
 }
