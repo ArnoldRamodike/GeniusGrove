@@ -6,10 +6,12 @@ import React, { useEffect, useState } from 'react'
 import ProjectBanner from '../_components/ProjectBanner';
 import ProjectInfo from '../_components/ProjectInfo';
 import ProductList from '@/app/_components/ProductList';
+import { usePathname } from 'next/navigation';
 
 const ProjectDetails = ({params}) => {
     const [productDetail, setProductDetail] = useState([]);
     const [productCategory, setProductCategory] = useState([]);
+    const path = usePathname();
 
     useEffect(() => {
       getProductById_();
@@ -17,14 +19,14 @@ const ProjectDetails = ({params}) => {
     
 
     const getProductById_ = () => {
-        GlobalApi.getProductById(1).then(res => {
+        GlobalApi.getProductById(params?.projectId).then(res => {
            setProductDetail(res.data.data);
            getProductListByCategory(res.data.data)
         })
     }
 
-    const getProductListByCategory= () => {
-        GlobalApi.getProductByCategory(productDetail?.attributes?.product_cat?.data?.attributes?.Name).then(res => {
+    const getProductListByCategory= (product) => {
+        GlobalApi.getProductByCategory(product?.attributes?.product_cat?.data?.attributes?.Name).then(res => {
             console.log(res.data.data);
            setProductCategory(res.data.data);
            
@@ -33,7 +35,7 @@ const ProjectDetails = ({params}) => {
   return (
     
     <div className='p-5 py-12 px-10 md:px-28'>
-        <Breadcrumb/>
+        <Breadcrumb path={path}/>
         <div className="grid grid-cols-1 md:grid-cols-2 mt-10 sm:flex-row gap-5 sm:gap-10 ">
             <ProjectBanner product={productDetail}/>
             <ProjectInfo product={productDetail}/>

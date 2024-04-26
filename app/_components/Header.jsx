@@ -1,52 +1,53 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import React from 'react'
 
 const Header = () => {
   return (
     <header className="bg-white">
         <div className="mx-auto flex h-16 max-w-screen-xl shadow-sm items-center gap-8 px-4 sm:px-6 lg:px-8">
-            <a className="block text-teal-600" href="#">
+            <Link className="block text-teal-600" href={'/'}>
             <span className="sr-only">Home</span>
             <Image src={'/logo.svg'} alt='logo' width={80} height={100}/>
-            </a>
+            </Link>
 
             <div className="flex flex-1 items-center justify-end md:justify-between">
             <nav aria-label="Global" className="hidden md:block">
                 <ul className="flex items-center gap-6 text-sm">
                 <li>
-                    <a className="text-gray-500 transition hover:text-gray-500/75" href="#"> Home </a>
+                    <Link className="text-gray-500 transition hover:text-gray-500/75" href={'/'}> Home </Link>
                 </li>
 
                 <li>
-                    <a className="text-gray-500 transition hover:text-gray-500/75" href="#"> Explore </a>
+                    <Link className="text-gray-500 transition hover:text-gray-500/75" href={'/projects'}> Explore </Link>
                 </li>
 
                 <li>
-                    <a className="text-gray-500 transition hover:text-gray-500/75" href="#"> Projects </a>
+                    <Link className="text-gray-500 transition hover:text-gray-500/75" href={'/projects'}> Projects </Link>
                 </li>
 
                 <li>
-                    <a className="text-gray-500 transition hover:text-gray-500/75" href="#"> Contact Us </a>
+                    <Link className="text-gray-500 transition hover:text-gray-500/75" href={'/contact'}> Contact Us </Link>
                 </li>
 
                 <li>
-                    <a className="text-gray-500 transition hover:text-gray-500/75" href="#"> About Us </a>
+                    <Link className="text-gray-500 transition hover:text-gray-500/75" href={'/about-us'}> About Us </Link>
                 </li>
                 </ul>
             </nav>
 
             <div className="flex items-center gap-4">
                 <div className="sm:flex sm:gap-4">
-                <a
+                <Link
                     className="block rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-white transition hover:bg-tertiary"
-                    href="#"
+                    href={"/login"}
                 >
                     Login
-                </a>
+                </Link>
 
                 <a
                     className="hidden rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium transition hover:text-primary sm:block"
-                    href="#"
+                    href={"/register"}
                 >
                     Register
                 </a>

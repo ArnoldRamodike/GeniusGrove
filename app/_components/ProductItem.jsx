@@ -1,12 +1,13 @@
 
 import { ArrowRightSquare } from 'lucide-react';
 import Image from 'next/image'
+import Link from 'next/link';
 import React from 'react'
 
 const ProductItem = ({product}) => {
 
   return (
-    <div className=''>
+    <Link href={'/project-detail/'+ product?.id}>
         <div className="hover:border p-1 rounded-lg border-blue-300">
             <Image src={product?.attributes?.banner?.data?.attributes?.url} alt='Product' width={400} height={350} className='rounded-t-lg h-[190px] object-cover'/>
         </div>
@@ -17,7 +18,7 @@ const ProductItem = ({product}) => {
             </div>
             <h2 className='font-bold'>${product?.attributes?.pricing}</h2>
         </div>
-    </div>
+    </Link>
   )
 }
 

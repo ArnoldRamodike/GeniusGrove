@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import GlobalApi from '../_utils/GlobalApi'
 import ProductItem from './ProductItem';
 
 const ProductList = ({productList}) => {
