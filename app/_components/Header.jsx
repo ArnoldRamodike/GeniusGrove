@@ -3,17 +3,47 @@ import { UserButton, useUser } from '@clerk/nextjs'
 import { ShoppingCart } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { CartContext } from '../_context/CartContext'
+import GlobalApi from '../_utils/GlobalApi'
+import Cart from './Cart'
 
 const Header = () => {
     const {user} = useUser();
     const [isLogin, setIsLogin] = useState(false);
+    const [openCart, setOpenCart] = useState(false);
+    const {cart, setCart} = useContext(CartContext);
 
     useEffect(() => {
       setIsLogin(window.location.href.toString().includes('sign-in'));
-    
-    }, [])
-    
+    }, []);
+
+    useEffect(() => {
+        setIsLogin(window.location.href.toString().includes('sign-up'));
+        getCartItems();
+      
+      }, [user]);
+
+      useEffect(() => {
+        setOpenCart(true);
+      }, [cart]);
+
+    const getCartItems = () => {
+        GlobalApi.getUserCartItems(user?.primaryEmailAddress?.emailAddress).then(res => {
+            const result = res.data.data;
+            result&& result.forEach(prd => {
+                 setCart(cart => [...cart,
+                    {
+                        id: prd.id,
+                        product: prd.attributes?.product?.data
+                    }
+                    ]);
+                  
+            });
+        //    cart && console.log(cart);
+          return result;
+        })
+      }
   return !isLogin&& (
     <header className="bg-white">
         <div className="mx-auto flex h-16 max-w-screen-xl shadow-sm items-center gap-8 px-4 sm:px-6 lg:px-8">
@@ -66,8 +96,11 @@ const Header = () => {
                      : 
                      <div className='flex items-center gap-5'>
                         <UserButton/>
-                        <h2 className='flex gap-1 cursor-pointer'> <ShoppingCart className='text-red-500 '/>(2)</h2>
+                        <h2 className='flex gap-1 cursor-pointer' onClick={() => setOpenCart(!openCart)}> 
+                          <ShoppingCart className='text-red-500 '/>({cart?.length})
+                        </h2>
                     </div>}
+                    {openCart && <Cart/>}
                 <button
                 className="block rounded bg-gray-100 p-2.5 text-gray-600 transition hover:text-gray-600/75 md:hidden"
                 >
