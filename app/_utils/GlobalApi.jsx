@@ -16,6 +16,10 @@ const getProductById = (id) => axiosClient.get('/products/'+id+'?populate=*');
 
 const getProductByCategory = (category) => axiosClient.get('/products?filters[product_cat][Name][$eq]='+category+"&populate=*");
 
+const addToCart = (data) => axiosClient.post('/carts', data);
+
+const getUserCartItems = (email) =>  axiosClient.get('/carts?[0][populate][product][populate]=banner&filters[email][$eq]='+email+"&populate=*")
+
 export default {
-    getLatestProducts, getProductById, getProductByCategory
+    getLatestProducts, getProductById, getProductByCategory, addToCart, getUserCartItems
 }
