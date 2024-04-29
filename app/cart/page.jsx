@@ -1,9 +1,13 @@
 'use client'
 import React, { useContext, useEffect, useState } from 'react'
 import { CartContext } from '../_context/CartContext'
+import GlobalApi from '../_utils/GlobalApi';
+import { useUser } from '@clerk/nextjs';
+import Link from 'next/link';
 
 const page = () => {
     const {cart, setCart} = useContext(CartContext);
+    const {user} = useUser();
     
     const getTotalAmount =() => {
         let totalAmount = 0;
@@ -12,6 +16,34 @@ const page = () => {
         });
         return totalAmount;
     }
+
+    const removeFromCart= (id) => {
+        console.log('Delete Item Id:', id);
+        GlobalApi.deleteCartItem(id).then(res => {
+
+            if (res) {
+                getCartItems();
+            }
+        },(err) => {
+            console.log(err);
+        })
+    }
+
+    const getCartItems = () => {
+        GlobalApi.getUserCartItems(user?.primaryEmailAddress?.emailAddress)
+        .then(res => {
+            const result = res.data.data;
+            setCart([]);
+            result&& result.forEach(prd => {
+                 setCart(cart => [...cart,
+                    {
+                        id: prd.id,
+                        product: prd.attributes?.product?.data
+                    }
+                    ]);  
+            });
+        })
+      }
 
   return (
     <section>
@@ -50,7 +82,7 @@ const page = () => {
                 <div className="flex flex-1 items-center justify-end gap-2">
                 <dt className="inline">${product?.product?.attributes?.pricing}</dt>
 
-                <button className="text-gray-600 transition hover:text-red-600">
+                <button className="text-gray-600 transition hover:text-red-600" onClick={() => removeFromCart(product?.id)}>
                     <span className="sr-only">Remove item</span>
 
                     <svg
@@ -84,15 +116,16 @@ const page = () => {
                 </dl>
 
                 <div className="flex justify-end">
-                <a
-                    href="#"
+                <Link
+                    href={'/'}
                     className="block rounded bg-gray-700 px-5 py-3 text-sm text-gray-100 transition hover:bg-gray-600"
                 >
                     Checkout
-                </a>
+                </Link>
                 </div>
             </div>
             </div>
+            <h2 className='text-gray-400 text-[14px] '><span className='text-red-500'>Note:</span> all the digital content will be sent to your registred <span className='text-primary'>email address.</span> </h2>
         </div>
         </div>
     </div>

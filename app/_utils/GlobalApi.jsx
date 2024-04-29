@@ -18,8 +18,10 @@ const getProductByCategory = (category) => axiosClient.get('/products?filters[pr
 
 const addToCart = (data) => axiosClient.post('/carts', data);
 
-const getUserCartItems = (email) =>  axiosClient.get('/carts?[0][populate][product][populate]=banner&filters[email][$eq]='+email+"&populate=*")
+const getUserCartItems = (email) =>  axiosClient.get('/carts?[0][populate][product][populate]=banner&filters[email][$eq]='+email+"&populate=*");
+
+const deleteCartItem = (id) => axiosClient.delete('/carts/'+id);
 
 export default {
-    getLatestProducts, getProductById, getProductByCategory, addToCart, getUserCartItems
+    getLatestProducts, getProductById, getProductByCategory, addToCart, getUserCartItems, deleteCartItem
 }
