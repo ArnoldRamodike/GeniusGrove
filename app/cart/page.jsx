@@ -4,10 +4,14 @@ import { CartContext } from '../_context/CartContext'
 import GlobalApi from '../_utils/GlobalApi';
 import { useUser } from '@clerk/nextjs';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
-const page = () => {
+const Cart = () => {
     const {cart, setCart} = useContext(CartContext);
     const {user} = useUser();
+    const [loading, setLoading] = useState(true);
+
+    const router = useRouter();
     
     const getTotalAmount =() => {
         let totalAmount = 0;
@@ -18,7 +22,6 @@ const page = () => {
     }
 
     const removeFromCart= (id) => {
-        console.log('Delete Item Id:', id);
         GlobalApi.deleteCartItem(id).then(res => {
 
             if (res) {
@@ -116,12 +119,12 @@ const page = () => {
                 </dl>
 
                 <div className="flex justify-end">
-                <Link
-                    href={'/'}
+                <button
+                    onClick={() => router.push('/checkout?amount='+ getTotalAmount())}
                     className="block rounded bg-gray-700 px-5 py-3 text-sm text-gray-100 transition hover:bg-gray-600"
                 >
                     Checkout
-                </Link>
+                </button>
                 </div>
             </div>
             </div>
@@ -133,4 +136,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Cart

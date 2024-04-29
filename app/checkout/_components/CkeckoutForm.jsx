@@ -1,9 +1,14 @@
+import { CartContext } from '@/app/_context/CartContext';
+import GlobalApi from '@/app/_utils/GlobalApi';
+import { useUser } from '@clerk/nextjs';
 import {PaymentElement, useElements, useStripe} from '@stripe/react-stripe-js';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 const CheckoutForm = ({amount}) => {
     const stripe = useStripe();
     const elements = useElements();
+    const {user} = useUser();
+    const {cart, setCart} = useContext(CartContext);
     const [loading, setLoading] = useState(false);
 
     const handleError = (error) => {
@@ -21,13 +26,37 @@ const CheckoutForm = ({amount}) => {
         // Make sure to disable form submission until Stripe.js has loaded.
         return;
       }
+
+      const createOrder = () => {
+        let productIds = [];
+        cart.forEach(element => {
+            productIds.push(element?.product?.id)
+        })
+        const data = {
+            data: {
+                email: user.primaryEmailAddress.emailAddress,
+                userName: user.fullName,
+                amount: amount,
+                product: productIds,
+            }
+        }
+        GlobalApi.createOrder(data).then(res => {
+            if (res) {
+                cart.forEach(element => {
+                   GlobalApi.deleteCartItem(element?.id).then(result => {
+                    console.log('Cart cleared', result);
+                   })
+                })
+            }
+        })
+      }
       //Triger
       const {error: submitError}  = await elements.submit();
         if (submitError) {
             handleError(submitError);
             return
         }
-  
+        createOrder();
       const res = await fetch('/api/create-intent', {
         method: 'POST',
         body: JSON.stringify({
