@@ -20,11 +20,11 @@ const ProductSection = () => {
     }
 
     const filterProductList= (category) => {
-        const result = products.filter(item => 
-        item.attributes?.product_cat?.data?.Name == category);
+        const result = products.filter((item, i) =>  
+        item?.attributes?.product_cat?.data?.attributes?.Name == category);
+ 
         return result
     }
-
 
   return products&&(
     <div className='px-10 md:px-20 '>

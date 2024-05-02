@@ -27,7 +27,6 @@ const ProjectDetails = ({params}) => {
 
     const getProductListByCategory= (product) => {
         GlobalApi.getProductByCategory(product?.attributes?.product_cat?.data?.attributes?.Name).then(res => {
-            console.log(res.data.data);
            setProductCategory(res.data.data);
            
         })

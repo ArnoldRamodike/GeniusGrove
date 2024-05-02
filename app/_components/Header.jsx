@@ -24,9 +24,9 @@ const Header = () => {
       
       }, [user]);
 
-      useEffect(() => {
-        setOpenCart(true);
-      }, [cart]);
+    //   useEffect(() => {
+    //     setOpenCart(true);
+    //   }, [cart]);
 
     const getCartItems = () => {
         GlobalApi.getUserCartItems(user?.primaryEmailAddress?.emailAddress).then(res => {
